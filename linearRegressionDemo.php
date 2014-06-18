@@ -1,6 +1,6 @@
 <?php
 // linearRegressionDemo.php
-// Copyright (c) 2011 Ronald B. Cemer
+// Copyright (c) 2011-2014 Ronald B. Cemer
 // All rights reserved.
 // This software is released under the BSD license.
 // Please see the accompanying LICENSE.txt for details.
@@ -70,9 +70,9 @@ for ($ai = 1; $ai < $argc; $ai++) {
 	$symbols[] = strtoupper(trim($arg));
 }
 
-sscanf($beginDate, '%04d-%02d-%02d', &$y, &$m, &$d);
+sscanf($beginDate, '%04d-%02d-%02d', $y, $m, $d);
 $beginDateJul = gregoriantojd($m, $d, $y);
-sscanf($endDate, '%04d-%02d-%02d', &$y, &$m, &$d);
+sscanf($endDate, '%04d-%02d-%02d', $y, $m, $d);
 $endDateJul = gregoriantojd($m, $d, $y);
 $ndays = ($endDateJul-$beginDateJul)+1;
 if ($ndays <= 0) {
@@ -104,7 +104,7 @@ foreach ($symbols as $symbol) {
 	$maxPrice = false;
 	$npoints = 0;
 	foreach ($quotes as $quote) {
-		sscanf($quote->date, '%04d-%02d-%02d', &$y, &$m, &$d);
+		sscanf($quote->date, '%04d-%02d-%02d', $y, $m, $d);
 		$daysoffset = gregoriantojd($m, $d, $y)-$beginDateJul;
 
 		$xarr[$npoints] = (double)$daysoffset;
@@ -121,10 +121,9 @@ foreach ($symbols as $symbol) {
 
 	// Do the linear regression, calculating slope and intercept.
 	$result = LinearRegression::calculate($xarr, $yarr, $npoints);
-	$slope = $result[0];
-	$intercept = $result[1];
-	$iterations = $result[2];
-	$mse = $result[3];
+	$slope = $result->slope;
+	$intercept = $result->intercept;
+	$mse = LinearRegression::calcSquaredError($xarr, $yarr, $npoints, $slope, $intercept);
 	$rmsError = sqrt($mse);
 
 	// Update min and max prices so that the graph will scale to include the entire projected line.
@@ -200,6 +199,6 @@ foreach ($symbols as $symbol) {
 	imagedestroy($img);
 
 	// Report results.
-	echo "symbol: $symbol\nndays: $ndays\nnpoints: $npoints\nslope: $slope\nintercept: $intercept\niterations: $iterations\nmse: $mse\nrms: $rmsError\n";
+	echo "symbol: $symbol\nndays: $ndays\nnpoints: $npoints\nslope: $slope\nintercept: $intercept\nmse: $mse\nrms: $rmsError\n";
 	echo "$symbol regression analysis is complete.  You can view the results in $graphFilename.\n";
 }

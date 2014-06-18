@@ -1,6 +1,6 @@
 <?php
 // YahooFinanceStockHistoryLoader.class.php
-// Copyright (c) 2011 Ronald B. Cemer
+// Copyright (c) 2011-2014 Ronald B. Cemer
 // All rights reserved.
 // This software is released under the BSD license.
 // Please see the accompanying LICENSE.txt for details.
